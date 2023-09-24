@@ -9,15 +9,11 @@ class DepartmentAdmin(admin.ModelAdmin):
     list_per_page = 20
     search_fields = ['name']
 
-    @admin.display(description='number of employees')
-    def employees_count(self, obj):
-        return obj.employees.count()
-
 
 class EmployeeAdmin(admin.ModelAdmin):
     list_display = ['full_name', 'position',
                     'hire_date', 'salary', 'department']
-    list_filter = ['position', 'department']
+    list_filter = ['department']
     list_per_page = 50
     list_select_related = ['department']
     search_fields = ['first_name', 'last_name', 'middle_name']

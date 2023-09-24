@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Дерево отделов{% endblock %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        {% block content %}{% endblock %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script>
+    function toggleEmployees(departmentId) {
+        var employeesDiv = document.getElementById('employees-' + departmentId);
+
+        if (employeesDiv.style.display === 'none') {
+            employeesDiv.style.display = 'block';
+        } else {
+            employeesDiv.style.display = 'none';
+        }
+    }
+</script>
+</body>
+</html>

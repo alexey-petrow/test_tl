@@ -5,7 +5,12 @@ from config.abstract_models import UUIDMixin, TimeStampedMixin
 
 class Department(UUIDMixin):
     name = models.CharField(verbose_name='department name', max_length=255)
-    parent = models.ForeignKey(to='self', on_delete=models.SET_NULL, null=True, blank=True)
+    parent = models.ForeignKey(to='self', on_delete=models.SET_NULL,
+                               null=True, blank=True, related_name='subdepartments')
+
+    @property
+    def employees_count(self):
+        return self.employees.count()
 
     class Meta:
         ordering = ['name']
