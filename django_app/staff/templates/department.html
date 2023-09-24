@@ -1,0 +1,22 @@
+<li class="list-group-item {% if not department.parent %}border-primary{% endif %}">
+    <div class="d-flex justify-content-between align-items-center">
+        {{ department.name | title }} with {{ department.employees_count }} employees
+        <button class="btn btn-info btn-sm" onclick="toggleEmployees('{{ department.id }}')">
+            Show/Hide employees
+        </button>
+    </div>
+    <div id="employees-{{ department.id }}" style="display: none;">
+        <ul>
+            {% for employee in department.employees.all %}
+                <li>{{ employee.full_name }} - {{ employee.position }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% if department.subdepartments.all %}
+        <ul class="list-group mt-2">
+            {% for subdepartment in department.subdepartments.all %}
+                {% include 'department.html' with department=subdepartment %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+</li>
