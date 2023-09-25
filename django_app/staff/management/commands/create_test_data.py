@@ -14,7 +14,18 @@ departments_sample = ['General Management', 'Marketing Department', 'Operations 
                       'Purchase Department']
 
 
-def _create_departments(parent: None | Department, depth: int, departments_list=None) -> list:
+def _create_departments(parent: None | Department,
+                        depth: int,
+                        departments_list: None | list[Department] = None) -> list[Department]:
+    """
+    Recursive creation of test departments and writing them to the database.
+    Args:
+        parent: (None | Department) Field for building a tree structure.
+        depth: (int) Recursion depth.
+        departments_list: (None | list[Department]) Storage for created Department objects.
+    Returns: (list[Department])
+        List of created Department objects.
+    """
     if departments_list is None:
         departments_list = []
 
@@ -30,8 +41,19 @@ def _create_departments(parent: None | Department, depth: int, departments_list=
     return departments_list
 
 
-def _create_employees(employees_count: int, departments_list: list, fake_object: Faker) -> None:
-    batch_size = EMPLOYEES_CREATION_BATCH_SIZE
+def _create_employees(employees_count: int,
+                      batch_size: int,
+                      departments_list: list[Department],
+                      fake_object: Faker) -> None:
+    """
+    Generates and writes batches of test employees to the database.
+    Args:
+        employees_count: (int) Number of objects to be created.
+        batch_size: (int) Batch size for group writing in database.
+        departments_list: (list[Department]) Data for the related field - department.
+        fake_object: (Faker) Object from external lib to creating random data for Employee object.
+    Returns: (None)
+    """
     employees = []
 
     for _ in range(employees_count):
@@ -60,14 +82,14 @@ class Command(BaseCommand):
         fake = Faker()
         time_start = time()
         departments = _create_departments(parent=None, depth=5)
-        departments_count = len(departments)
         _create_employees(employees_count=EMPLOYEES_COUNT,
+                          batch_size=EMPLOYEES_CREATION_BATCH_SIZE,
                           departments_list=departments,
                           fake_object=fake)
         time_finish = time()
         spent_time = round(time_finish - time_start, 2)
         self.stdout.write(self.style.SUCCESS(
-            f'Successfully created {departments_count} '
+            f'Successfully created {len(departments)} '
             f'departments and {EMPLOYEES_COUNT} employees.\n'
             f'Time spent on creation: {spent_time} sec.'
         ))
