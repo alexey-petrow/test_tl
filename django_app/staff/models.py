@@ -1,6 +1,12 @@
 from django.db import models
+from django.db.models import Count
 
 from config.abstract_models import UUIDMixin, TimeStampedMixin
+
+
+class DepartmentManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().annotate(employees_count=Count('employees'))
 
 
 class Department(UUIDMixin):
@@ -8,9 +14,7 @@ class Department(UUIDMixin):
     parent = models.ForeignKey(to='self', on_delete=models.SET_NULL,
                                null=True, blank=True, related_name='subdepartments')
 
-    @property
-    def employees_count(self):
-        return self.employees.count()
+    objects = DepartmentManager()
 
     class Meta:
         ordering = ['name']
